@@ -26,7 +26,7 @@ team-plugins/
 │       │   ├── team-test-standards-frontend/
 │       │   │   └── SKILL.md    # 前端测试与 review 规范（Vitest、Testing Library、Playwright）
 │       │   ├── godev/
-│       │   │   ├── SKILL.md    # Go 开发规范：Google Go Style + 团队加码
+│       │   │   ├── SKILL.md    # Go 开发规范：Google Go Style + 团队加码；现代 Go 惯用法引用 JetBrains 官方插件
 │       │   │   └── references/ # guide / decisions / best-practices 中文化
 │       │   ├── techspec/
 │       │   │   ├── SKILL.md    # PRD → techspec（带 references/canon、reviewer）
@@ -47,14 +47,18 @@ team-plugins/
 
 注意：`commands/`、`skills/`、`agents/` 都放在插件根目录，`.claude-plugin/` 里只放清单文件，别把组件塞进去。
 
-## 安装（新成员两步）
+## 安装（新成员三步）
 
 ```
 /plugin marketplace add RBowind/team-plugins
 /plugin install team-standards
+/plugin marketplace add JetBrains/go-modern-guidelines
+/plugin install modern-go-guidelines@goland-claude-marketplace
 ```
 
-装完后自动生效：AI 会在写测试、review 时遵守团队规范；输入 `/team-standards:devloop <capability>` 对已放行（contract Status: APPROVED）的 feature 开交付循环；输入 `/team-standards:test-ready` 走统一提测检查。插件命令带 `/team-standards:` 前缀调用，裸名不可用。
+前两步装团队规范；后两步装 JetBrains 官方「现代 Go 惯用法」插件，godev 引用它但不含它的内容——上游更新自动跟随。装完建议开一次自动更新：`/plugin` → Marketplaces → 选 `goland-claude-marketplace` → Enable auto-update。
+
+装完后自动生效：AI 会在写测试、review 时遵守团队规范，写 Go 代码时同时过 godev（风格）和 use-modern-go（现代写法）；输入 `/team-standards:devloop <capability>` 对已放行（contract Status: APPROVED）的 feature 开交付循环；输入 `/team-standards:test-ready` 走统一提测检查。插件命令带 `/team-standards:` 前缀调用，裸名不可用。
 
 ## 怎么改
 

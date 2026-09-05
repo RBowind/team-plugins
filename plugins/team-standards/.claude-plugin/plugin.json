@@ -1,5 +1,5 @@
 {
   "name": "team-standards",
   "description": "团队 AI 编程标配：编码规范（含安全红线）与架构规范（Go）、Go 开发规范（godev）、后端/前端测试规范、SDD 规格 skills（techspec、sddspec）、提测命令、SDD 交付循环（/devloop + test-writer/reviewer/implementer 三角色）",
-  "version": "0.7.0"
+  "version": "0.8.0"
 }

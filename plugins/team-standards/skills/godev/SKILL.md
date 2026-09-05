@@ -7,7 +7,7 @@ description: 仅当项目是 Go 或正在写 .go 文件时启用。提供 Google
 
 ## 范围
 
-本 skill 覆盖 [Google Go Style Guide](https://google.github.io/styleguide/go/index) 三页（guide / decisions / best-practices）。三页原文已中文化落到 `references/`，按需加载。
+本 skill 覆盖 [Google Go Style Guide](https://google.github.io/styleguide/go/index) 三页（guide / decisions / best-practices），原文已中文化落到 `references/`，按需加载。**现代 Go 惯用法不在本 skill 内**：由 JetBrains 官方插件 modern-go-guidelines 的 use-modern-go skill 提供（CLI 按 go.mod 版本动态输出条目），本 skill 不复制条目内容，跟随上游更新。
 
 - `references/guide.md` — 主指南（风格原则、核心准则；Canonical + Normative）
 - `references/decisions.md` — 风格决策（命名、imports、错误、语言细节；Normative）
@@ -20,6 +20,7 @@ description: 仅当项目是 Go 或正在写 .go 文件时启用。提供 Google
 1. **项目级说明 > godev**。项目根 `AGENTS.md` / `README` 写明偏离 Google 风格的条款时，godev 让位；reviewer 按项目说明走。
 2. **team-code-standards 通用条款继续适用**。命名/函数结构/注释/依赖/格式的通用底线不变，godev 只补 Go 专精。
 3. **Google styleguide 与团队约定冲突时，按下方"团队加码"小节执行**。
+4. **use-modern-go 与 Google styleguide 互补不冲突**：Google 管风格与命名，use-modern-go 管语言特性的新旧写法。版本纪律优先于一切现代条目：版本不满足就不写。
 
 ## 核心规则（高频必查）
 
@@ -91,6 +92,13 @@ description: 仅当项目是 Go 或正在写 .go 文件时启用。提供 Google
 - 真实 transport 优先：HTTP/RPC 测集成用真 client 连测试服务端。
 - bug 修复先复现测试再改实现。
 
+### 现代写法（use-modern-go skill 提供）
+
+- **版本纪律**：写代码前先看项目 `go.mod` 的 `go` 版本，只写该版本及之前可用的特性。
+- 新代码用现代写法；存量旧写法不动，不顺手全局替换。条目适用前提：不改变行为、能编译。
+- 条目内容（min/max、slices.Contains、cmp.Or、wg.Go、t.Context、new 表达式、encoding/json/v2 等 55 条）由 use-modern-go 的 CLI 按项目 Go 版本动态列出并给详细解释，本 skill 不复制条目，跟随 JetBrains 上游更新。
+- 本会话若没有 use-modern-go 的输出（插件未装或未触发），停下提醒用户安装：`/plugin marketplace add JetBrains/go-modern-guidelines` + `/plugin install modern-go-guidelines@goland-claude-marketplace`，装完 `/reload-plugins`。
+
 ### 性能
 
 - slice / map 已知大小时 `make([]T, 0, n)` / `make(map[K]V, n)` 预分配；不要过量。
@@ -108,13 +116,15 @@ description: 仅当项目是 Go 或正在写 .go 文件时启用。提供 Google
 
 - **必装**：`gofmt` / `goimports` / `golangci-lint` / `staticcheck`。
 - **CI 必跑**：`go test ./...` / `golangci-lint run` / `go mod tidy` 检查（无未用依赖）/ `govulncheck`（扫依赖 CVE，发现已知漏洞即挂）。
+- **建议**：`modernize` 分析器扫新代码的过时写法（`go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest ./...`），修复前过目 diff。
 
 ## 触发后流程
 
 1. 读项目 `AGENTS.md` / `README` 看是否有项目级偏离声明。
-2. 按本 skill 核心规则出风格判断。
-3. 复杂/争议场景 `Read references/<file>.md` 查中文化原文。
-4. 改完跑 `gofmt -l .` / `goimports -l .` / `golangci-lint run` 全绿才算完成。
+2. 看项目 `go.mod` 的 `go` 版本，确定语言特性上限。
+3. 按本 skill 核心规则出风格判断与写法选择。
+4. 复杂/争议场景 `Read references/<file>.md` 查中文化原文（Google 三页）；现代写法以 use-modern-go 的 list/explain 输出为准。
+5. 改完跑 `gofmt -l .` / `goimports -l .` / `golangci-lint run` 全绿才算完成。
 
 ## 不在范围内
 
