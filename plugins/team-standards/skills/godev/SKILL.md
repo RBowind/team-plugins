@@ -97,7 +97,7 @@ description: 仅当项目是 Go 或正在写 .go 文件时启用。提供 Google
 - **版本纪律**：写代码前先看项目 `go.mod` 的 `go` 版本，只写该版本及之前可用的特性。
 - 新代码用现代写法；存量旧写法不动，不顺手全局替换。条目适用前提：不改变行为、能编译。
 - 条目内容（min/max、slices.Contains、cmp.Or、wg.Go、t.Context、new 表达式、encoding/json/v2 等 55 条）由 use-modern-go 的 CLI 按项目 Go 版本动态列出并给详细解释，本 skill 不复制条目，跟随 JetBrains 上游更新。
-- 本会话若没有 use-modern-go 的输出（插件未装或未触发），停下提醒用户安装：`/plugin marketplace add JetBrains/go-modern-guidelines` + `/plugin install modern-go-guidelines@goland-claude-marketplace`，装完 `/reload-plugins`。
+- 本会话若没有 use-modern-go 的输出（插件未装或未触发），停下提醒用户安装：`/plugin install modern-go-guidelines@born-team`（同市场转发条目，自动跟随 JetBrains 上游），装完 `/reload-plugins`。
 
 ### 性能
 

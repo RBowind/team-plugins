@@ -8,6 +8,15 @@
       "name": "team-standards",
       "description": "团队 AI 编程标配：编码规范（含安全红线）与架构规范（Go）、Go 开发规范（godev）、后端/前端测试规范、SDD 规格 skills（techspec、sddspec）、提测命令、SDD 交付循环（/devloop + test-writer/reviewer/implementer 三角色）",
       "source": "./plugins/team-standards"
+    },
+    {
+      "name": "modern-go-guidelines",
+      "description": "JetBrains 官方现代 Go 惯用法（本市场转发，内容自动跟随上游更新）",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/JetBrains/go-modern-guidelines",
+        "path": "plugin"
+      }
     }
   ]
 }
