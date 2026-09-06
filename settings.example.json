@@ -8,8 +8,20 @@
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "<网关模型 ID>",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "<网关模型 ID>",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "<网关模型 ID>",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "<网关模型 ID>",
     "CLAUDE_CODE_SUBAGENT_MODEL": "<网关模型 ID>",
     "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "ENABLE_TOOL_SEARCH": "true"
+  },
+  "extraKnownMarketplaces": {
+    "born-team": {
+      "autoUpdate": true,
+      "source": {
+        "source": "github",
+        "repo": "RBowind/team-plugins"
+      }
+    }
   }
 }

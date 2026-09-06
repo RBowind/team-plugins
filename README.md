@@ -64,7 +64,9 @@ team-plugins/
 
 插件只能分发规范（skills/commands/agents/hooks），分发不了你本地 `~/.claude/settings.json` 里的 `env`——网关地址、token、模型映射得自己配一次，AI 才连得上模型。
 
-模板见仓库根 `settings.example.json`：把 `env` 块里的占位符换成自己的网关地址和 token，合并进 `~/.claude/settings.json`。只合并 `env` 块，整份覆盖会冲掉你自己的其他配置。模型映射键（`ANTHROPIC_DEFAULT_*_MODEL`）是可选的：不配就跟随 `ANTHROPIC_MODEL`。
+模板见仓库根 `settings.example.json`：把 `env` 块里的占位符换成自己的网关地址和 token，合并进 `~/.claude/settings.json`。只合并 `env` 块，整份覆盖会冲掉你自己的其他配置。模型映射键（`ANTHROPIC_DEFAULT_*_MODEL`）是可选的：不配就跟随 `ANTHROPIC_MODEL`。网关侧关键开关：`API_TIMEOUT_MS` 放宽长请求超时，`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 关掉对外部遥测的依赖，`CLAUDE_CODE_ATTRIBUTION_HEADER` 与 `ENABLE_TOOL_SEARCH` 按需。
+
+模板里的 `extraKnownMarketplaces` 块一步注册 born-team 市场并开启 `autoUpdate`，等价于三条命令里的第一条加手动开自动更新；合并后插件仍要 `/plugin install` 装（`enabledPlugins` 由安装命令自己写入，模板不收）。
 
 ## 怎么改
 
