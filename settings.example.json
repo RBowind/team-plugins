@@ -1,0 +1,15 @@
+{
+  "autoUpdatesChannel": "latest",
+  "language": "简体中文",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://<网关地址>:<端口>",
+    "ANTHROPIC_AUTH_TOKEN": "<你的网关 token>",
+    "ANTHROPIC_MODEL": "<网关模型 ID>",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "<网关模型 ID>",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "<网关模型 ID>",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "<网关模型 ID>",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "<网关模型 ID>",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}

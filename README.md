@@ -41,6 +41,7 @@ team-plugins/
 │           ├── test-writer.md   # 把一个 B 编号写成失败测试，不碰业务代码
 │           ├── test-reviewer.md # 独立评审测试：对 spec、对规范、红因验证，只读
 │           └── implementer.md   # 把业务代码写到全绿，不碰测试不改 spec
+├── settings.example.json       # 网关接入配置模板（插件分发不了的部分，见下文"前置"）
 ├── CONTEXT.md                  # 术语表：devloop、B 编号、回链等定名
 └── README.md
 ```
@@ -58,6 +59,12 @@ team-plugins/
 一个市场、两个插件：`team-standards` 是团队规范；`modern-go-guidelines` 是 JetBrains 官方的现代 Go 惯用法插件，由本市场**转发**——godev 引用它但不含它的内容。转发条目不锁版本，JetBrains 一提交，成员 `/plugin marketplace update` + `/plugin update` 就拿到最新，本仓库不用跟着动。装完建议开一次自动更新：`/plugin` → Marketplaces → 选 `born-team` → Enable auto-update。
 
 装完后自动生效：AI 会在写测试、review 时遵守团队规范，写 Go 代码时同时过 godev（风格）和 use-modern-go（现代写法）；输入 `/team-standards:devloop <capability>` 对已放行（contract Status: APPROVED）的 feature 开交付循环；输入 `/team-standards:test-ready` 走统一提测检查。插件命令带 `/team-standards:` 前缀调用，裸名不可用。
+
+## 前置：模型网关接入（插件带不动的部分）
+
+插件只能分发规范（skills/commands/agents/hooks），分发不了你本地 `~/.claude/settings.json` 里的 `env`——网关地址、token、模型映射得自己配一次，AI 才连得上模型。
+
+模板见仓库根 `settings.example.json`：把 `env` 块里的占位符换成自己的网关地址和 token，合并进 `~/.claude/settings.json`。只合并 `env` 块，整份覆盖会冲掉你自己的其他配置。模型映射键（`ANTHROPIC_DEFAULT_*_MODEL`）是可选的：不配就跟随 `ANTHROPIC_MODEL`。
 
 ## 怎么改
 
