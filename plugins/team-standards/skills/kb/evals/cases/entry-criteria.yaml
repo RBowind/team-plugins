@@ -1,0 +1,20 @@
+id: entry-criteria
+title: 判断一条服务内部实现是否进知识库
+description: 验证 Agent 用「谁会再问一次」的判据把服务内部实现挡在知识库外，而不是见到技术改动就沉淀。
+
+input:
+  prompt: |
+    我们刚把 order 服务里的退款重试从固定间隔改成带退避的循环，改动都在 order 内部，
+    对外可观察行为没变。这次要不要更新知识库？给我结论和理由。
+
+expect:
+  must_contain:
+    - "内部实现"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all:
+          - "内部实现"
+          - "代码"

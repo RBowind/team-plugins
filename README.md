@@ -2,11 +2,13 @@
 
 团队的 Claude Code 插件库：规范打成 skills，高频动作打成 commands，随 git 分发，评审后合并。所有人装同一个 marketplace，本地就是同一套配置。
 
-装完后 AI 干活的默认行为变了：写代码过编码规范（含安全红线），动结构走架构规范，写测试 review 走测试规范，写 Go 代码过 godev，大改动先出 techspec / sddspec，开发用 `/team-standards:devloop` 按 contract 逐条交付（测试先行、独立评审、绿灯收敛），提测用 `/team-standards:test-ready`。
+装完后 AI 干活的默认行为变了：写代码过编码规范（含安全红线），动结构走架构规范，写测试 review 走测试规范，写 Go 代码过 godev，大改动先出 techspec / sddspec，开发用 `/team-standards:devloop` 按 contract 逐条交付（测试先行、独立评审、绿灯收敛），提测用 `/team-standards:test-ready`。跨服务、跨团队、以后还会被再问一次的结论按 kb 规范沉淀进知识库，体检用 `/team-standards:kb-health`。
 
-复杂 feature 的完整链路：techspec（图示走 tech-diagram-design）→ sddspec（人审放行出 APPROVED 的 sprint contract）→ `/team-standards:devloop`（循环到全绿 + mutation 验收）→ `/team-standards:test-ready`（出口人工检查）。
+复杂 feature 的完整链路：techspec（图示走 tech-diagram-design）→ sddspec（人审放行出 APPROVED 的 sprint contract）→ `/team-standards:devloop`（循环到全绿 + mutation 验收）→ `/team-standards:test-ready`（出口人工检查）→ durable 结论按 kb 归档进知识库。
 
 规格分两层：spec.md 是描述目标系统**当前行为**的 live doc，本次改动的新增/修改/移除全部落在 contract 里。spec 不记变更历史，整个 capability 被移除时直接删文件。
+
+知识库是第三层：规格跟着 capability 走、留在产品 repo；知识库存跨服务、跨团队的长期结论（流程、共享实体、服务边界、集成契约、决策），页面按证据定状态，只有 `stable` 页进默认检索。
 
 ## 目录结构
 
@@ -36,17 +38,24 @@ team-plugins/
 │       │   ├── sddspec/
 │       │   │   ├── SKILL.md    # PRD + techspec → live behaviorspec + sprint contract（带 references/canon、evaluator）
 │       │   │   └── references/
-│       │   └── tech-diagram-design/
-│       │       ├── SKILL.md    # 图示设计与按需加载索引；上游 cathrynlavery/diagram-design 的本地适配层
-│       │       ├── references/ # 上游索引：来源、固定 sha、语义模式 → 视觉类型映射
+│       │   ├── tech-diagram-design/
+│       │   │   ├── SKILL.md    # 图示设计与按需加载索引；上游 cathrynlavery/diagram-design 的本地适配层
+│       │   │   ├── references/ # 上游索引：来源、固定 sha、语义模式 → 视觉类型映射
+│       │   │   └── evals/      # 技能自评用例
+│       │   └── kb/
+│       │       ├── SKILL.md    # 团队知识库：检索、沉淀、定状态、记缺口、体检
+│       │       ├── references/ # canon：页面结构、五类归属、三类证据、状态升降级、校验清单
+│       │       ├── scripts/    # kb_lint.py：断链、孤立、超期、状态取值、疑似重复（只出候选）
 │       │       └── evals/      # 技能自评用例
 │       ├── commands/
 │       │   ├── test-ready.md    # /test-ready 提测检查命令
+│       │   ├── kb-health.md     # /kb-health 知识库体检，只出候选清单不改文件
 │       │   └── devloop.md       # /devloop 按 sprint contract 交付循环
-│       └── agents/              # devloop 的三个交付角色，口径可单独评审
+│       └── agents/              # 交付与评审角色，口径可单独评审
 │           ├── test-writer.md   # 把一个 B 编号写成失败测试，不碰业务代码
 │           ├── test-reviewer.md # 独立评审测试：对 spec、对规范、红因验证，只读
-│           └── implementer.md   # 把业务代码写到全绿，不碰测试不改 spec
+│           ├── implementer.md   # 把业务代码写到全绿，不碰测试不改 spec
+│           └── kb-reviewer.md   # 独立评审知识页面：价值判据、归属唯一、证据充分，只读
 ├── settings.example.json       # 网关接入配置模板（插件分发不了的部分，见下文"前置"）
 ├── CONTEXT.md                  # 术语表：devloop、B 编号、回链等定名
 └── README.md

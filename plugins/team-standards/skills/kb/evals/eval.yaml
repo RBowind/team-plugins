@@ -1,0 +1,26 @@
+schema_version: v1alpha1
+
+environment:
+  type: none
+
+skills:
+  - source: local_path
+    path: ..
+
+engine:
+  name: claude_code
+
+cases:
+  files:
+    - evals/cases/entry-criteria.yaml
+    - evals/cases/status-usage.yaml
+    - evals/cases/page-shape.yaml
+    - evals/cases/confirm-before-delete.yaml
+  defaults:
+    timeout_seconds: 120
+    max_turns: 3
+
+report:
+  formats:
+    - json
+    - html

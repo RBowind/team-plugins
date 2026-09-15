@@ -15,7 +15,7 @@ sddspec 给复杂 feature 从 PRD + techspec 生成黑盒行为契约 spec（beh
 
 - **techspec（地基）**：高层工程指导，DB 关系、大体流程、架构决策、成功标准。一个 feature 一份。
 - **behaviorspec（本 skill 产出）**：黑盒行为契约，按 capability 拆，放 feature 代码目录的 spec 目录（目录名跟随宿主 repo 既有约定，如 `spec/features/<capability>/`；无约定时新建 `specs/<capability>/`）。实现细节归到 design.md。
-- **wiki（知识库，可选）**：durable 的 domain knowledge（状态机、契约、cross-repo flow、ADR）。宿主仓库有知识库时，behaviorspec 的 durable 部分 merge 后归档进去；没有则留在 spec 原地。
+- **wiki（知识库，可选）**：durable 的 domain knowledge（状态机、契约、cross-repo flow、ADR）。宿主仓库有知识库时，behaviorspec 的 durable 部分按 `../kb/SKILL.md` 归档进去；没有则留在 spec 原地。
 - **sprint contract（本 skill 自动生成）**：交付 checklist，放 feature 目录。
 
 ## 输入与流程

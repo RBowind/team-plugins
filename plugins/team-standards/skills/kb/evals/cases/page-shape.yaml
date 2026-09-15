@@ -1,0 +1,24 @@
+id: page-shape
+title: 产出的知识页面带 frontmatter 与证据段
+description: 验证 Agent 写页面时按 canon 给全 frontmatter 字段并标明证据来源，而不是只写正文段落。
+
+input:
+  prompt: |
+    把这条沉淀进知识库：退款失败超过 24h 由 payment 值班兜底，order 只落状态。
+    依据是《退款规则 v3》第 4 节，以及 payment/internal/refund/service.go 里的 RetryFailed。
+
+expect:
+  must_contain:
+    - "kind:"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all:
+          - "kind:"
+          - "status:"
+          - "owner:"
+          - "services:"
+          - "verified_at:"
+          - "证据"

@@ -47,5 +47,23 @@ techspec 图示的设计与按需加载索引 skill，仓库 `cathrynlavery/diag
 test-ready 命令，开发完成后的出口人工检查，与 devloop 互不重叠。
 _Avoid_: /tice（旧名）
 
+**知识库（kb）**:
+跨服务、跨团队的长期结论，按页面组织，根目录跟随宿主 repo 约定（无约定时 `docs/kb/`）。只收同时满足三条判据的知识：涉及多个服务或团队、会被独立查询、有证据支撑。页面按归属分五类（流程/实体/服务/集成/决策），按状态分三档（draft/review/stable）。
+_Avoid_: wiki（本库内指个人知识库，语义不同）、文档站
+
+**知识页面**:
+知识库的最小单位，一条知识一个页面，回答一个以后会被再问一次的问题。结构含 frontmatter（title/kind/status/owner/services/verified_at）、一句话结论、分类骨架、证据段、相关内容。
+_Avoid_: 文档、wiki 条目
+
+**归属**:
+一条知识在知识库里的唯一正式落点。同一事实出现第二处正式解释即视为重复，其余位置改成引用。项目名本身不构成归属。
+_Avoid_: 分类、标签
+
+**知识缺口**:
+工作需要、知识库没有的长期跨服务答案，记在当前工作项的 follow-up 通道（techspec 的 `*.follow-ups.md`、contract 的 Follow-ups 段）。它是待回答的问题，不建页面，不阻塞开发；工作收尾时每个缺口都要落地为页面或说明为何不入库。
+
+**stable 页**:
+证据完整、边界清晰、可进默认检索的知识页面；draft 与 review 页只用于调查未解决问题，引用时必须带状态。
+
 **命令调用名**:
-文档与对话中写安装态全名 `/team-standards:<命令名>`（如 `/team-standards:devloop`、`/team-standards:test-ready`）；插件内文件名保持裸名。
+文档与对话中写安装态全名 `/team-standards:<命令名>`（如 `/team-standards:devloop`、`/team-standards:test-ready`、`/team-standards:kb-health`）；插件内文件名保持裸名。

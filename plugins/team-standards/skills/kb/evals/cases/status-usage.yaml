@@ -1,0 +1,22 @@
+id: status-usage
+title: 检索时如何区别对待 stable 与 draft
+description: 验证 Agent 默认只把 stable 页面当事实用，draft/review 页面只当线索并带状态引用。
+
+input:
+  prompt: |
+    新人问我退款失败谁兜底，知识库里有两条页面讲这件事：
+    一条 status: stable，一条 status: draft。
+    我该怎么用这两条来回答他？
+
+expect:
+  must_contain:
+    - "stable"
+    - "draft"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all:
+          - "stable"
+          - "draft"
