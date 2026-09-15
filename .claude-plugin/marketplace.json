@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "team-standards",
-      "description": "团队 AI 编程标配：编码规范（含安全红线）与架构规范（Go）、Go 开发规范（godev）、后端/前端测试规范、SDD 规格 skills（techspec、sddspec）、提测命令、SDD 交付循环（/devloop + test-writer/reviewer/implementer 三角色）",
+      "description": "团队 AI 编程标配：编码规范（含安全红线）与架构规范（Go）、Go 开发规范（godev）、后端/前端测试规范、规格 skills（techspec、sddspec、tech-diagram-design）、提测命令、SDD 交付循环（/devloop + test-writer/reviewer/implementer 三角色，contract 按行为编号逐条收敛）",
       "source": "./plugins/team-standards"
     },
     {
@@ -16,6 +16,15 @@
         "source": "git-subdir",
         "url": "https://github.com/JetBrains/go-modern-guidelines",
         "path": "plugin"
+      }
+    },
+    {
+      "name": "diagram-design",
+      "description": "Cathryn Lavery 的图示设计技能（本市场转发，锁定 commit sha 2.6.22；team-standards 的 tech-diagram-design 索引它）",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/cathrynlavery/diagram-design.git",
+        "sha": "8d8b2993ee2256ee7dfc0eeb3b5713aba3b60792"
       }
     }
   ]

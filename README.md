@@ -4,7 +4,9 @@
 
 装完后 AI 干活的默认行为变了：写代码过编码规范（含安全红线），动结构走架构规范，写测试 review 走测试规范，写 Go 代码过 godev，大改动先出 techspec / sddspec，开发用 `/team-standards:devloop` 按 contract 逐条交付（测试先行、独立评审、绿灯收敛），提测用 `/team-standards:test-ready`。
 
-复杂 feature 的完整链路：techspec → sddspec（人审放行出 APPROVED 的 sprint contract）→ `/team-standards:devloop`（循环到全绿 + mutation 验收）→ `/team-standards:test-ready`（出口人工检查）。
+复杂 feature 的完整链路：techspec（图示走 tech-diagram-design）→ sddspec（人审放行出 APPROVED 的 sprint contract）→ `/team-standards:devloop`（循环到全绿 + mutation 验收）→ `/team-standards:test-ready`（出口人工检查）。
+
+规格分两层：spec.md 是描述目标系统**当前行为**的 live doc，本次改动的新增/修改/移除全部落在 contract 里。spec 不记变更历史，整个 capability 被移除时直接删文件。
 
 ## 目录结构
 
@@ -22,7 +24,7 @@ team-plugins/
 │       │   ├── team-architecture-standards/
 │       │   │   └── SKILL.md    # 架构规范（Go）：分层口径、层间契约、改动范围、数据模型、选型
 │       │   ├── team-test-standards-backend/
-│       │   │   └── SKILL.md    # 后端测试与 review 规范（Go：ginkgo、sddspec 回链、mutation testing）
+│       │   │   └── SKILL.md    # 后端测试与 review 规范（Go：BDD 分层、contract 回链、四层断言、mutation testing）
 │       │   ├── team-test-standards-frontend/
 │       │   │   └── SKILL.md    # 前端测试与 review 规范（Vitest、Testing Library、Playwright）
 │       │   ├── godev/
@@ -31,9 +33,13 @@ team-plugins/
 │       │   ├── techspec/
 │       │   │   ├── SKILL.md    # PRD → techspec（带 references/canon、reviewer）
 │       │   │   └── references/
-│       │   └── sddspec/
-│       │       ├── SKILL.md    # PRD + techspec → 行为契约 spec（带 references/canon、evaluator）
-│       │       └── references/
+│       │   ├── sddspec/
+│       │   │   ├── SKILL.md    # PRD + techspec → live behaviorspec + sprint contract（带 references/canon、evaluator）
+│       │   │   └── references/
+│       │   └── tech-diagram-design/
+│       │       ├── SKILL.md    # 图示设计与按需加载索引；上游 cathrynlavery/diagram-design 的本地适配层
+│       │       ├── references/ # 上游索引：来源、固定 sha、语义模式 → 视觉类型映射
+│       │       └── evals/      # 技能自评用例
 │       ├── commands/
 │       │   ├── test-ready.md    # /test-ready 提测检查命令
 │       │   └── devloop.md       # /devloop 按 sprint contract 交付循环
@@ -54,9 +60,10 @@ team-plugins/
 /plugin marketplace add RBowind/team-plugins
 /plugin install team-standards@born-team
 /plugin install modern-go-guidelines@born-team
+/plugin install diagram-design@born-team
 ```
 
-一个市场、两个插件：`team-standards` 是团队规范；`modern-go-guidelines` 是 JetBrains 官方的现代 Go 惯用法插件，由本市场**转发**——godev 引用它但不含它的内容。转发条目不锁版本，JetBrains 一提交，成员 `/plugin marketplace update` + `/plugin update` 就拿到最新，本仓库不用跟着动。装完建议开一次自动更新：`/plugin` → Marketplaces → 选 `born-team` → Enable auto-update。
+一个市场、三个插件：`team-standards` 是团队规范；`modern-go-guidelines` 是 JetBrains 官方的现代 Go 惯用法插件，由本市场**转发**——godev 引用它但不含它的内容，转发条目不锁版本，JetBrains 一提交，成员 `/plugin marketplace update` + `/plugin update` 就拿到最新；`diagram-design` 是 Cathryn Lavery 的图示设计技能，同样由本市场转发，但**锁定 commit sha**（team-standards 的 tech-diagram-design 是它的索引层，索引锚定的 sha 必须和实际安装的一致；上游发新版时同步更新两处的 sha）。装完建议开一次自动更新：`/plugin` → Marketplaces → 选 `born-team` → Enable auto-update。
 
 装完后自动生效：AI 会在写测试、review 时遵守团队规范，写 Go 代码时同时过 godev（风格）和 use-modern-go（现代写法）；输入 `/team-standards:devloop <capability>` 对已放行（contract Status: APPROVED）的 feature 开交付循环；输入 `/team-standards:test-ready` 走统一提测检查。插件命令带 `/team-standards:` 前缀调用，裸名不可用。
 

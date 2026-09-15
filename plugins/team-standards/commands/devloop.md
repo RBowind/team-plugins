@@ -1,62 +1,189 @@
 ---
-description: SDD 交付循环：输入 sddspec 的 behaviorspec + 人已放行的 sprint contract，逐条 B"写失败测试→独立评审→实现转绿"，收尾跑 mutation testing 和 Q* 自查，全绿后提示 /team-standards:test-ready 提测。仅后端 Go。
+description: 后端 Go 的规格驱动交付循环。读取已批准的 behaviorspec 和 sprint contract，逐项执行“失败测试、独立评审、实现转绿”，最后完成质量检查和本地验证。
 argument-hint: <capability> [repo路径]
 ---
 
 # devloop
 
-对 $ARGUMENTS 执行 devloop 交付循环。
+根据 `$ARGUMENTS` 执行 Spec-Driven Development（规格驱动开发，SDD）交付循环。
 
-范围限制：v1 只支持后端 Go。本 feature 若含前端改动，前端部分不进循环，仍走手工开发 + /team-standards:test-ready。
+本命令只处理后端 Go。目标 repo 必须有 `go.mod`。如果一个 feature 同时包含前端和后端，只处理 contract 中属于后端 Go 的行为；其他部分交回宿主项目自己的开发流程。
 
-你的角色：主 agent，只做编排——spawn subagent、读它们的输出、跑测试、判红绿灯、勾 contract。你不写测试代码、不写业务代码、不改 spec、不替人放行。
+你是主 agent，只负责调度、运行验证和记录进度：
 
-三个执行角色由本插件 agents/ 提供，spawn 时用带命名空间的名称：`team-standards:test-writer`、`team-standards:test-reviewer`、`team-standards:implementer`。spawn 找不到 agent 说明插件 agents 未安装，停下报告，不要改用通用 subagent 顶替。提测 gate（/team-standards:test-ready）是出口人工检查，循环只在收尾时提示跑它，不代跑。
+- `team-standards:test-writer` 写测试
+- `team-standards:test-reviewer` 独立评审测试
+- `team-standards:implementer` 写实现
 
-## 1. 启动检查
+必须使用完整的 agent 名称。任一 agent 不存在时立即停止，说明插件安装不完整，不要用通用 subagent 顶替。
 
-1. **解析 repo 路径**：参数里给了 repo 路径就直接用；没给就按 sddspec 的规则读 `repo-paths.local.yaml` 解析目标 repo。没有这个文件，先问用户要路径。
-2. **确认硬前提**，缺任一项拒绝启动，提示先跑 sddspec：
-   - 目标 repo 存在 `specs/<capability>/spec.md`；
-   - `specs/<capability>/contract.md`（sprint contract）存在，且首行 `Status: APPROVED`。sddspec 生成 contract 即 DRAFT，人评审放行后手改 APPROVED；非 APPROVED 一律视为未放行。
-   你不生成 contract、不替人放行、不把"找不到 contract"当成"contract 已放行"。
-3. **确认测试命令**：以项目 README 记录为准，启动时向用户确认一次。README 没记录就停下来问（与 /team-standards:test-ready 口径一致）。
-4. **读 contract**：列出 Behavioral（B*）里所有未勾项，本循环只做这些；已勾的是已完成，直接跳过。contract 复选框是唯一进度状态：断点续跑就是重跑 /team-standards:devloop，从第一个未勾项继续；不新建任何进度文件。
+你不直接写测试或业务代码，不修改 spec，也不替用户批准 contract。你可以更新 contract 的完成状态和执行证据。
 
-## 2. Schema 阶段
+以下事情必须由用户决定：未定方案、异常处理、push、开 Pull Request（拉取请求，PR）、合并和部署。
 
-进 B 循环之前，落 contract 的 Schema Changes：spawn implementer 写迁移/DDL，准备测试库环境（`TEST_DATABASE_URL` 或一次性 PostgreSQL 容器）。传入：contract 的 Schema Changes 条目原文、repo 绝对路径、测试库连接方式。等它报 `STATUS: DONE`，你再亲跑一条项目已有的集成测试，确认报错不是连库失败。这一步完成才进第 3 节——没有 schema 就没有可跑的集成测试。落不了 → 第 5 节。
+## 1. 启动
 
-## 3. 逐条 B 循环（按 B 编号串行）
+1. 确定目标 repo。参数带路径时直接使用；否则从当前工作区查找。找不到就问用户。
+2. 确认 repo 根目录存在 `go.mod`。不存在就停止，说明本命令只支持后端 Go。
+3. 在 repo 内定位该 capability 的 spec 目录。sddspec 约定 spec 与 feature 代码同目录存放，但目录名不固定（如 `specs/<capability>/`、`spec/features/<capability>/`），文件名也可能带前缀（如 `<name>-spec.md`、`<name>-contract.md`）。按 capability 名搜索定位；找不到或有多个命中时问用户，不要猜。contract 必须存在；spec 通常存在，只有 contract 中剩余行为全部标为 REMOVED、整个 capability 已删除时才允许不存在。
+4. contract 头部必须含 `Status: APPROVED`（规范头部为 `# Sprint Contract`、`Source:`、`Status:` 三行，不卡首行）。contract 缺失或状态未批准时停止，提示用户先完成 sddspec 和人工评审。不要创建 contract，也不要自行改状态。
+5. 读取 repo 的 `AGENTS.md`、`CLAUDE.md`、README 和测试脚本，确定：
+   - 当前行为的测试命令
+   - 全量集成测试命令
+   - 受影响包的 `go test` 命令
+   - 格式化命令
+   - lint 命令
+   - 测试环境和测试数据库的启动方式；不需要数据库时记为 `N/A`
+6. 命令或环境不明确时问用户，不要自创。
+7. 读取 contract，只处理 Behavioral Changes 区域中未勾选、且属于后端 Go 的行为。每项必须标为 ADDED、MODIFIED 或 REMOVED；已勾选项直接跳过。前后端范围分不清时先问用户。contract 复选框是唯一进度记录，不另建状态文件。
+8. 如果剩余工作明显无法在一个会话内完成，先建议用户拆小 contract。用户确认继续后再执行。
 
-每条 B 走一遍下面 6 步，全部 B 绿后进第 4 节；任何一步卡住 → 第 5 节。
+## 2. 准备 schema
 
-1. **spawn `team-standards:test-writer` 写这条 B 的失败测试**。传入：spec.md 路径（含对应 Scenario）、contract.md 路径与该 B 条目原文、repo 绝对路径、测试命令、测试库连接方式（第 2 节确定的 `TEST_DATABASE_URL` 或容器起法）。它按 team-test-standards-backend 执行：`It` 上方回链注释 `// spec: Bn`、四层断言（端到端响应、参数 edge case、外部服务调用参数、数据库字段变动）、缺哪层写理由注释。
-2. **spawn `team-standards:test-reviewer` 评审**。传入路径：本轮测试文件、spec.md、contract.md、本插件 `skills/team-test-standards-backend/SKILL.md` 的绝对路径（你从插件安装目录解析，不让 reviewer 自己翻找）；执行参数：repo 绝对路径、B 编号、第 1.3 步确认的测试命令。独立评审，不采信作者自述；最多 2 轮，每轮重新 spawn 一个新实例。口径必须包含：实际执行测试，确认它是红的，且红因是"该 B 行为未实现"。编译错误、连不上库、fixture 崩这类红得不对的，直接打回。
-3. **处理 verdict**：打回 → 把 verdict（Gaps + 执行证据）交给 test-writer 返工，Gaps 是本轮唯一修改范围，改完再进第 2 轮评审；2 轮仍打回 → 第 5 节。
-4. **放行后 spawn `team-standards:implementer` 写业务代码到绿**。传入：B 编号与测试文件路径、spec.md 路径、contract.md 路径、design.md（若有）、测试命令、repo 绝对路径、测试库连接方式、本轮范围（默认只跑该 B 用例到绿；全量由你第 5 步跑）。implementer 不碰测试文件、不改 spec。红绿灯循环最多 3 轮（每轮 = implementer 改代码 + 你重跑该 B 测试）；3 轮不绿 → 第 5 节。
-5. **跑全量集成 suite**：这条 B 绿后，按第 1.3 步确认过的命令跑全量集成测试，防止后条 B 打碎前面已完成的 B。仅当项目 suite 超过 5 分钟才降级：循环中只跑当前 B 的测试——降级时派活给 implementer 要明确写"本轮只跑 Bn"，全部 B 转绿后补跑一次全量兜底，并把降级原因记进 contract。
-6. **勾 contract + 输出进度**：全绿才勾 `- [ ] Bn` 复选框，勾时在 contract 该条旁附一行证据（测试命令 + 结果）。打回的、没转绿的，一律不勾。同时向用户输出一行进度，例：`B3 ✓ 集成 14/14 绿`。
+contract 没有 Schema Changes 时跳过。
+
+有 schema 变更时，调用 `team-standards:implementer`，并明确 `MODE: SCHEMA`。传入 Schema Changes 原文、repo 绝对路径、迁移命令和测试环境连接方式。
+
+implementer 返回 `STATUS: GREEN` 后，你再运行一条仓库已有的集成测试，确认迁移已生效，测试环境可以连接。返回 `BLOCKED` 或验证失败时停止。
+
+## 3. 逐项实现行为
+
+按 contract 顺序串行处理。当前行为没有完成，不开始下一项。
+
+### 3.1 写失败测试
+
+调用 `team-standards:test-writer`，明确 `MODE: BEHAVIOR`，传入：
+
+- contract.md 的绝对路径，以及存在时的 spec.md 绝对路径；整个 capability 已移除时 spec 写 `N/A`
+- 当前行为编号、变更分类和条目原文
+- repo 绝对路径
+- 当前行为的测试命令
+- 测试环境连接方式
+
+处理返回状态：
+
+- `RED` 或 `ALREADY_IMPLEMENTED`：进入独立评审，由 reviewer 确认断言和实际结果
+- `BLOCKED`：按“卡住时怎么处理”停止
+
+编译错误、环境错误、fixture 错误或没有匹配到测试，都不算有效红灯。
+
+### 3.2 独立评审测试
+
+调用新的 `team-standards:test-reviewer` 实例，明确 `MODE: BEHAVIOR`，传入：
+
+- 本轮测试文件
+- contract.md，以及存在时的 spec.md；整个 capability 已移除时 spec 写 `N/A`
+- 本插件 `skills/team-test-standards-backend/SKILL.md` 的绝对路径
+- repo 绝对路径
+- 当前行为编号和变更分类
+- 当前行为的测试命令
+- 测试环境连接方式
+
+reviewer 必须自己运行测试。处理 verdict：
+
+- `PASS`：进入实现
+- `FAIL`：把完整 verdict 和执行证据交回 test-writer；test-writer 只修 Gaps 中列出的测试问题
+- `ALREADY_IMPLEMENTED`：你亲自重跑后停止，请用户核对 contract
+- `BLOCKED`：先处理环境问题；无法处理就停止
+
+每次返工后都调用新的 reviewer。最多评审两轮；仍未通过就停止。
+
+### 3.3 实现到测试通过
+
+评审通过后，调用 `team-standards:implementer`，明确 `MODE: BEHAVIOR`，传入：
+
+- 当前行为编号、变更分类和测试文件
+- contract.md、存在时的 spec.md，以及存在时的 design.md
+- repo 绝对路径
+- 当前行为的测试命令
+- 测试环境连接方式
+
+implementer 不得修改测试、spec 或 contract。每轮结束后，由你重跑当前行为的测试。最多三轮；仍未通过就停止。
+
+implementer 如果报告测试可能有错，把证据交回 test-writer，并重新走独立评审。不要让 implementer 自己改测试。
+
+### 3.4 跑回归测试
+
+当前行为通过后，运行全量集成测试。
+
+如果全量测试通常超过五分钟，可以在循环中只跑当前行为和受影响包，全部行为完成后再跑一次全量测试。采用此方式时，把原因写进 contract。
+
+### 3.5 更新 contract
+
+只有当前行为测试和回归测试都通过，才能勾选对应复选框，并记录：
+
+`测试驱动开发（Test-Driven Development，TDD）红绿证据：<命令和关键输出> | 受影响包：<测试结果>`
+
+已经有 commit 时补上 commit 哈希。未通过或仍在返工的行为不能勾选。
+
+每完成一项，向用户报告一行进度和测试结果。
 
 ## 4. 收尾
 
-1. **跑一次 mutation testing**：go-mutesting，只能在 WSL 里跑（Windows 原生编译失败），只跑本次改动的包。做法：把目标 repo 的 Windows 路径换算成 `/mnt/<盘>/...`，执行 `wsl -e bash -lc "cd <mnt路径> && go install github.com/zimmski/go-mutesting/cmd/go-mutesting@latest && go-mutesting ./internal/<改动包>/..."`，输出全文留存。有存活变异体时退出码仍是 0——必须读 mutation score 和存活清单，不能只看命令成败。
-2. **补杀**：存活变异体 → spawn test-writer 补测试杀掉（传入存活清单每条的 diff、补杀范围、全量 suite 命令、repo 绝对路径）→ 以增量模式 spawn test-reviewer 只审增量 diff（另传本轮补测的改动文件列表）→ 你重跑全量 suite 和 go-mutesting。go-mutesting 由你统一执行，test-writer 和 test-reviewer 都不自己跑。最多 2 轮。
-3. **存活转人**：2 轮后仍存活的、以及 TestWriter 在补杀交付里判为等价变异/不可达分支并附依据的存活项，一并列清单转人裁决。理由经人确认或改写后才写进 contract 与提测说明——agent 的候选理由不充当最终结论。
-4. **Q* 自查**：以 Q* 自查模式 spawn test-reviewer，传入 contract 的 Q* 条目原文 + 相关测试与 spec 材料路径，逐条给结论，三种：已满足 / 未满足 / 需人确认。未满足且属实现范围的 → 派 implementer 修（计入红绿灯 3 轮预算）后重过本步；需人确认与不可自动修的 → 进第 5 节转人清单。
-5. **Pass Rule 核对**：按 contract 的 Pass Rule 逐条核对（含 lint），结论写进总结报告。
-6. **总结报告**：每条 B 的状态与证据、mutation score 与存活处理情况、Q* 结论、Pass Rule 核对结果、转人清单。只有无转人残留且 Pass Rule 逐条满足时，最后一句才是：全部收敛，可以跑 /team-standards:test-ready 提测；否则列出未裁决与未满足项，不写收敛结论。
+### 4.1 变异测试
 
-## 5. 卡点转人
+只有仓库已经配置变异测试，或用户明确要求时才运行。使用项目现有命令，只覆盖本次改动的包。不要自行安装工具。
 
-触发条件：test-reviewer 2 轮打回不收敛、红绿灯 3 轮不绿、schema 落不了、怀疑 spec 本身写错。
+变异测试由主 agent 统一执行，test-writer 和 test-reviewer 都不自己跑。工具在 Windows 原生跑不起来时（如 go-mutesting 编译失败），把 repo 的 Windows 路径换算成 `/mnt/<盘>/...` 转在 WSL 里跑，输出全文留存，并记下这个限制。
 
-转人时停止循环，报告三件事：
+检查变异分数和存活清单，不能只看退出码；存在存活变异体时退出码仍是 0。有存活变异体时：
 
-1. 卡在哪：哪条 B、哪一步；
-2. 证据：test-reviewer 的 verdict、测试输出原文；
-3. 两种候选解决方向：各一句话，用户拍板，你不代拍。
+1. 调用 test-writer，明确 `MODE: MUTATION`，传入存活变异体 diff、允许改动的测试文件、contract.md、存在时的 spec.md、测试命令和 repo 路径。
+2. 调用新的 test-reviewer，明确 `MODE: MUTATION`，只评审本轮增量测试。
+3. 由你重跑全量测试和变异测试。
 
-## 6. spec 免疫
+最多两轮。仍存活的变异体，以及等价变异、不可达分支等候选理由，都交给用户确认。未经确认，不写成最终结论。
 
-任何 agent（主 agent、test-writer、test-reviewer、implementer）永不修改 spec.md。循环中发现 spec 与实现或现实冲突：停止转人，回 sddspec 流程处理。devloop 内不修 spec，也不写绕开 spec 的实现。
+### 4.2 检查 Quality 条目
+
+调用 test-reviewer，明确 `MODE: QUALITY`，传入 contract 中每条 Quality 原文、存在时的 spec、相关测试文件、repo 路径和需要执行的验证命令。
+
+reviewer 对每条给出“已满足”“未满足”或“需用户确认”。未满足且属于当前实现范围的，交给 implementer 修复后重审；其他项加入待处理清单。
+
+### 4.3 跑最终验证
+
+逐条核对 Pass Rule，并运行：
+
+- 受影响包的 `go test`；改动跨多个包时覆盖全部受影响包
+- 全量集成测试
+- 仓库规定的格式化命令
+- `golangci-lint run` 或仓库规定的等价命令
+- README 或持续集成（Continuous Integration，CI）规定的其他必跑项
+
+使用仓库已有命令。任何一项没跑或失败，都要在总结中写明。
+
+### 4.4 输出总结
+
+总结包括：
+
+- 每个行为的状态和测试证据
+- 变异测试结果；跳过时写明原因
+- 每个 Quality 条目的结论
+- Pass Rule 和本地检查结果
+- 仍需用户处理的事项
+
+全部通过且没有待处理事项时，写“本地交付已完成”，并提示用户可以跑 `/team-standards:test-ready` 提测。是否 push、开 PR 或提测，由用户决定；提测 gate 是出口人工检查，本命令只提示，不代跑。
+
+## 5. 卡住时怎么处理
+
+出现以下任一情况，立即停止当前循环：
+
+- reviewer 两轮后仍不通过
+- implementer 三轮后测试仍不通过
+- schema 或测试环境无法使用
+- spec、contract、实现或外部契约互相冲突
+- 涉及资金、安全或其他高风险决策，现有材料不足
+
+报告三部分：
+
+1. 卡在哪个行为、哪一步。
+2. reviewer verdict、测试输出等直接证据。
+3. 两个可选处理方向，各写一句依据，等用户决定。
+
+不要猜答案，也不要继续处理后面的行为。
+
+## 6. 不改 spec
+
+主 agent、test-writer、test-reviewer 和 implementer 都不得修改 spec.md，也不得改写 contract 中已有行为的判定条件。
+
+如果 spec 与现实不符，停止循环，回到 sddspec 原位修正 live spec，并更新 contract 中的变更分类、依据和迁移信息。删除行为直接从 spec 移除，不保留旧编号或勘误墓碑；历史由 Git 和 contract 保留。spec 与 contract 重新批准前，devloop 保持阻塞。

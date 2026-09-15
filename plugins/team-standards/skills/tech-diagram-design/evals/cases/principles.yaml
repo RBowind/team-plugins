@@ -1,0 +1,23 @@
+id: principles
+title: 验证 tech-diagram-design 的核心设计与编辑性原则
+description: 验证 Agent 在使用该 Skill 时是否掌握目标信息密度、节点限制以及静态输出要求。
+
+input:
+  prompt: |
+    请总结使用 tech-diagram-design skill 时应遵守的核心编辑性原则与格式要求：
+    1. 目标信息密度大约是多少？
+    2. 建议的节点数量上限是多少？
+    3. 默认生成什么格式的交付物？
+
+expect:
+  must_contain:
+    - "9"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all:
+          - "4/10"
+          - "9"
+          - "HTML"

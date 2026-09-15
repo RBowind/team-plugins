@@ -1,7 +1,7 @@
 ---
 name: techspec
 description: >-
-  适用于"写 techspec"、"把 PRD 变成 tech spec"、"精简 spec"、"review techspec"、"重塑已有 techspec"等请求。输入是 PRD、techspec 草稿或零散需求，输出中文。不处理实现代码、安全审计或执行；没有 PRD、或还需要先探索方案时，改用 brainstorming。
+  适用于“写 techspec”“把 PRD 变成 tech spec”“精简 spec”“review techspec”“重塑已有 techspec”等请求；输入是 PRD、techspec 草稿或零散需求，输出中文。不处理实现代码、安全审计或执行；没有 PRD、需要先探索方案时改用 brainstorming。
 ---
 
 # Techspec
@@ -13,13 +13,13 @@ techspec 是给实现者的当前有效工程指导。它只说明现在要实�
 ## 输入与流程
 
 1. 判断输入：PRD / 零散需求走起草路径；已有 techspec 走重塑路径。
-2. PRD / 零散需求先做 5-10 行回读，说明目标、主流程、实体和已知集成；请用户纠正理解，不把回读当 approval gate。
+2. PRD / 零散需求先做 5--10 行回读，说明目标、主流程、实体和已知集成；请用户纠正理解，不把回读当 approval gate。
 3. 识别缺口并按“缺口处理”执行。
 4. 判形态：单文件 / 文档集（判据见 canon 形态段）。文档集时主 agent 把同一工作区中的入口 + 全部详情文件整套交给 reviewer，并说明形态。
 5. 按 `references/techspec-canon.md` 起草或重塑。重塑前诊断结构、内容、图示；删除不表达当前有效决策的历史叙事。
 6. 写 techspec 及按需附件。
 7. 按 canon 的可交付自检清单自检。
-8. 按 `references/reviewer.md` 运行一次独立 reviewer；处理其 finding。修完不再复审，本轮到此为止。
+8. 按 `references/reviewer.md` 运行一次独立 reviewer；处理其 finding，不重新审查。
 
 读取本地 PRD 用 `Read`；读取 Confluence、GitHub 等远程来源用可用的对应工具。读不到来源时说明限制，不猜测原文内容。
 
@@ -37,7 +37,7 @@ techspec 是给实现者的当前有效工程指导。它只说明现在要实�
 
 所有 techspec 必须保留 canon 定义的五个常驻章节，顺序不变，不合并、不删除。不适用时保留标题，并用一句自然工程语言说明当前功能为何不涉及该项。
 
-语义级改动必须先经用户确认，才能写进正文。以下改动通常是语义级：字段或类型变更、接口契约变更、状态机变更、新设计选择，以及任何会改变实现者行为的事实。
+语义级改动未经用户确认不得写回。以下改动通常是语义级：字段或类型变更、接口契约变更、状态机变更、新设计选择，以及任何会改变实现者行为的事实。
 
 允许自动修复机械不一致，但必须存在一个明确、可核实且无冲突的权威来源。例如权威来源写 `posted_margin`，正文或图示误写 `margin` 时，可统一为 `posted_margin`。来源冲突、证据不足，或存在相反的用户确认时，报 🔴 并暂停。
 
@@ -94,7 +94,7 @@ reviewer 也可按 `references/reviewer.md` 的边界维护 follow-ups；它不�
 - **单文件形态**：`docs/tech-specs/<topic>-tech-spec.md`
 - **文档集形态**：`docs/tech-specs/<domain>/`，包含入口文件和详情文件。
 - **重塑**：就近写在输入文件同目录，或就地修改。
-- **重塑外部源文档时**：使用重塑日期命名 `<YYYY-MM-DD>_<topic>.md`；不要把重塑、canon 这类工作流术语写进文件名或正文。
+- **重塑外部源文档时**：使用重塑日期命名 `<YYYY-MM-DD>_<topic>.md`；不要把“重塑”“lean-canon”等工作流术语写入文件名或正文。
 
 ## 相关资料
 
@@ -106,8 +106,9 @@ reviewer 也可按 `references/reviewer.md` 的边界维护 follow-ups；它不�
 ## 相关 skill
 
 - 从零探索一个 feature：brainstorming
+- 图示设计与按需加载参考：`../tech-diagram-design/SKILL.md`；需要实际生成架构图、流程图或重绘外部图示时先读它
 - Mermaid 语法细节：mermaid-diagrams
 - 安全或合规审计：security-reviewer
 - 语言自然度：优先 humanizer；不可用时 reviewer 自检
 
-引用的 skill 不在当前环境时的兜底：brainstorming、mermaid-diagrams、security-reviewer 缺失就跳过，在交付说明里注明哪步没做。
+引用的 skill 不在当前环境时的兜底：brainstorming、mermaid-diagrams、security-reviewer 缺失就跳过，在交付说明里注明哪步没做；tech-diagram-design 缺失时按 `references/techspec-canon.md` 的图示规则直接写 Mermaid 源图。
