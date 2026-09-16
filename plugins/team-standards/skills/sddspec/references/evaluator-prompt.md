@@ -29,7 +29,7 @@
 
 ## 评估维度
 
-### C4 黑盒纯度（最重要）
+### 黑盒纯度（最重要）
 
 每条语句问"如果团队用不同的语言、框架、基础设施重写这个服务，这条还成立吗？"成立 → 边界行为（留）；不成立 → 实现细节（flag）。
 
@@ -39,7 +39,7 @@
 
 FAIL if 发现实现细节。引用违规行。
 
-### C5 格式合规
+### 格式合规
 
 对 canon 查：
 
@@ -56,7 +56,7 @@ FAIL if 发现实现细节。引用违规行。
 
 FAIL if 格式违规或 live doc 混入变更历史。
 
-### C6 枚举一致
+### 枚举一致
 
 对 techspec §3 的 enum：
 
@@ -66,7 +66,7 @@ FAIL if 格式违规或 live doc 混入变更历史。
   - spec 值像有意为之、techspec 似不全 → WARN，建议补 techspec
 - WARN 不致 FAIL。
 
-### C7 副作用完整
+### 副作用完整
 
 对 techspec §4 sequence 的 effects：
 
@@ -75,7 +75,7 @@ FAIL if 格式违规或 live doc 混入变更历史。
 
 FAIL if 漏 effect。
 
-### C8 交叉引用一致
+### 交叉引用一致
 
 spec 引用其他 spec 时：
 
@@ -87,7 +87,7 @@ spec 引用其他 spec 时：
 
 断链、陈旧引用或缩写首次展开失效时 FAIL；仅重复时 WARN。
 
-### C9 spec 内部完整性（新增）
+### spec 内部完整性
 
 - 每个 Requirement 至少一个 Scenario？
 - 失败场景是一等公民（独立 `#### Scenario:`，不是附注）？
@@ -95,7 +95,7 @@ spec 引用其他 spec 时：
 
 FAIL if 缺失。
 
-### C10 语言自然度（新增）
+### 语言自然度
 
 - 无 AI 套话词（赋能/抓手/闭环/范式/链路/打通/底座/全链路/一站式/沉淀）？
 - 无自造术语？
@@ -105,10 +105,10 @@ FAIL if 套话/自造词/缩写未展开。
 
 ### 降级 coverage（没 ontology，用 techspec + PRD 当准基准）
 
-- **C0（降级）**：PRD 每条 acceptance criterion 有对应 scenario？无对应 → 标 coverage gap 转人（PRD 可能有 out-of-scope AC，只 WARN 不 FAIL）。
-- **C1（降级）**：spec 场景覆盖 techspec §4 主流程每个步骤？
-- **C2（降级）**：spec 状态转移对齐 techspec §3 ER/状态机？
-- **C3（降级）**：spec 外部调用对齐 techspec §5 接口契约 / §4 sequence 外部交互？
+- **PRD 验收覆盖**：PRD 每条 acceptance criterion 有对应 scenario？无对应 → 标 coverage gap 转人（PRD 可能有 out-of-scope AC，只 WARN 不 FAIL）。
+- **主流程覆盖**：spec 场景覆盖 techspec §4 主流程每个步骤？
+- **状态机覆盖**：spec 状态转移对齐 techspec §3 ER/状态机？
+- **外部调用覆盖**：spec 外部调用对齐 techspec §5 接口契约 / §4 sequence 外部交互？
 
 techspec 是 high-level，可能没列全所有 action/state/external call。**techspec 没覆盖到的 coverage → 不 FAIL，标 coverage gap 转人 gate**（在 verdict 里列出"待人审 coverage")。
 
@@ -133,17 +133,17 @@ Verdict FAIL if 任一维度 FAIL。WARN 不致 FAIL。
 ## Criteria Results
 | 维度 | 结果 | 详情 |
 |---|---|---|
-| C4 黑盒纯度 | PASS/FAIL | 违规行引用 file:line |
-| C5 格式 | PASS/FAIL | 违规列表 |
-| C6 枚举 | PASS/FAIL/WARN | 值 + mismatch 方向 |
-| C7 副作用 | PASS/FAIL | 漏的 effect + file:line |
-| C8 交叉引用 | PASS/WARN | 断/重复引用 |
-| C9 内部完整性 | PASS/FAIL | 缺失项 |
-| C10 语言自然度 | PASS/FAIL | 套话/自造词/缩写 |
-| C0 coverage（降级） | PASS/WARN | PRD AC 无对应 scenario |
-| C1 coverage（降级） | PASS/WARN | techspec §4 未覆盖区域 |
-| C2 coverage（降级） | PASS/WARN | techspec §3 未覆盖状态转移 |
-| C3 coverage（降级） | PASS/WARN | techspec §5/§4 未覆盖外部调用 |
+| 黑盒纯度 | PASS/FAIL | 违规行引用 file:line |
+| 格式合规 | PASS/FAIL | 违规列表 |
+| 枚举一致 | PASS/FAIL/WARN | 值 + mismatch 方向 |
+| 副作用完整 | PASS/FAIL | 漏的 effect + file:line |
+| 交叉引用 | PASS/WARN | 断/重复引用 |
+| spec 内部完整性 | PASS/FAIL | 缺失项 |
+| 语言自然度 | PASS/FAIL | 套话/自造词/缩写 |
+| coverage: PRD 验收 | PASS/WARN | PRD AC 无对应 scenario |
+| coverage: 主流程 | PASS/WARN | techspec §4 未覆盖区域 |
+| coverage: 状态机 | PASS/WARN | techspec §3 未覆盖状态转移 |
+| coverage: 外部调用 | PASS/WARN | techspec §5/§4 未覆盖外部调用 |
 
 ## Gaps（FAIL 项）
 每条：
@@ -156,9 +156,43 @@ Verdict FAIL if 任一维度 FAIL。WARN 不致 FAIL。
 - **Suggestion**：建议
 
 ## Contract Extraction（if PASS）
-- B1 [ADDED|MODIFIED]: {本次新增或修改的 scenario 名 from file X} → verified by BDD test
-- B2 [REMOVED]: {旧行为及移除后的可观测结果；Reason/Migration 可选} → verified by BDD test
+- B1 [ADDED|MODIFIED]: {本次新增或修改的 scenario 名 from file X}
+- B2 [REMOVED]: {旧行为及移除后的可观测结果；Reason/Migration 可选}
 ```
+
+## contract 自检（spec 通过、人 gate 通过、contract 落盘后另起一轮）
+
+这一轮只评 contract，不评 spec。输入：目标 spec.md、contract.md、本次变更基线、canon。FORBIDDEN 同前——仍不读源码和测试文件。
+
+评这些：
+
+- 每条 B 的类型与目标 spec 对得上：ADDED/MODIFIED 指向的 Scenario 在当前 spec 里确实存在；REMOVED 描述的行为在基线里存在、在当前 spec 里已不存在。
+- 每条 B 指向的 Scenario 名在 spec 中唯一可定位。
+- B 编号在本份 contract 内唯一、连续，且相对上一版没有重排；新增项取的是新编号。
+- contract 只列本次 Behavioral Changes，不含上一版已交付条目。
+- Quality 区非空；Pass Rule 引用的每个 Q 编号在 Quality 区存在。
+- Follow-ups 的 FU 编号唯一，且不含正文已经解决的遗留项。
+
+输出格式：
+
+```markdown
+## Verdict: PASS | FAIL
+
+## Criteria Results
+| 检查项 | 结果 | 详情 |
+|---|---|---|
+| B 与 spec 对应 | PASS/FAIL | 对不上的 B + file:line |
+| Scenario 可定位 | PASS/FAIL | 重名或找不到的 |
+| B 编号唯一稳定 | PASS/FAIL | 重排或重号 |
+| 只列本次变更 | PASS/FAIL | 混入的旧条目 |
+| Quality 与 Pass Rule 自洽 | PASS/FAIL | 悬空的 Q 引用 |
+| Follow-ups 有效 | PASS/WARN | 残留或重号 |
+
+## Gaps（FAIL 项）
+每条同前：Gap / Fix / Location
+```
+
+max 2 轮，FAIL 则改 contract 后重 spawn。
 
 ## 评估原则
 
@@ -174,7 +208,7 @@ Verdict FAIL if 任一维度 FAIL。WARN 不致 FAIL。
 
 max 2 轮。主 agent 读 verdict：
 
-- PASS → 从本次差异抽 contract：ADDED/MODIFIED 对应目标 spec scenarios，REMOVED 对应基线中被删行为；再补 Q* + Schema Changes 契约级。PRD AC 覆盖已由 C0 把关，contract 不单列对照表。
+- PASS → 从本次差异抽 contract：ADDED/MODIFIED 对应目标 spec scenarios，REMOVED 对应基线中被删行为；再补 Q* + Schema Changes 契约级。PRD AC 覆盖已由 coverage 维度把关，contract 不单列对照表。
 - FAIL → 改 spec 基于具体 gap，重 spawn 新 Evaluator（每轮新 subagent 保持干净，不让主 agent 自评）。
 
 2 轮仍 FAIL → 报告 recurring gaps，暂停转人。原话："Spec failed evaluation 2 times. Recurring gaps: [list]. 这可能说明 techspec 或 PRD 输入不足，不是 spec 写作问题。" 等用户指导。

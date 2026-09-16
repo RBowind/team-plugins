@@ -1,6 +1,6 @@
 ---
 name: team-test-standards-frontend
-description: 团队前端测试与 review 规范。写前端测试、补用例、自查或 review 前端代码改动时使用，让 AI 写出的测试对齐团队口径。测试奖杯模型：单元（Vitest）、组件集成（Testing Library + MSW）、e2e（Playwright）、sddspec 回链。后端测试用 team-test-standards-backend。
+description: 团队前端测试与 review 规范。写前端测试、补用例、自查或 review 前端代码改动时使用，让 AI 写出的测试对齐团队口径。测试奖杯模型：单元（Vitest）、组件集成（Testing Library + MSW）、e2e（Playwright）、contract 回链。后端测试用 team-test-standards-backend。
 ---
 
 # 团队前端测试与 review 规范
@@ -29,7 +29,7 @@ description: 团队前端测试与 review 规范。写前端测试、补用例�
 
 1. 先读 `specs/<capability>/spec.md` 和 feature 目录下的 sprint contract。找不到 spec 就先问这个测试对应哪个 capability，不凭空写。
 2. spec 的 Scenario 和 contract 的 B 编号 1:1。每个 B 编号必须落到恰好一个用例，不多不少。
-3. 每个用例上方写回链注释：`// spec: B1`。spec 改了，测试跟着改；不允许出现无回链的游离用例。
+3. 每个用例上方写回链注释：`// contract: B1`。contract 改了，测试跟着改；不允许出现无回链的游离用例。
 
 ## 组件集成测试写法（主力层）
 
@@ -45,7 +45,7 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { server } from 'test/mocks/server'
 
-it('提交失败时显示错误提示', () => { // spec: B3
+it('提交失败时显示错误提示', () => { // contract: B3
   server.use(
     http.post('/api/orders', () => HttpResponse.json(
       { message: '库存不足' }, { status: 409 },
@@ -69,7 +69,7 @@ it('提交失败时显示错误提示', () => { // spec: B3
 - flaky 测试隔离出来修，不许靠重试硬扛进 CI。
 
 ```ts
-test('登录后能下单成功', async ({ page }) => { // spec: B1
+test('登录后能下单成功', async ({ page }) => { // contract: B1
   await page.goto('/login')
   await page.getByLabel('用户名').fill('buyer-test')
   await page.getByLabel('密码').fill('S3cret-pass!')
@@ -84,12 +84,12 @@ test('登录后能下单成功', async ({ page }) => { // spec: B1
 2. 改动没有越出任务声明的文件范围；越界了就停下来说明。
 3. 新增依赖、环境变量、配置项，在改动说明里单列出来。
 4. 接口改动（参数、返回、错误码）在改动说明里标"接口变更"，reviewer 重点看。
-5. 新写的测试已按 spec B 编号回链。
+5. 新写的测试已按 contract 的 B 编号回链。
 
 ## review 口径（人 review AI 改动时按这个查）
 
 - 先看测试有没有真的覆盖改动，再看实现。
 - AI 自己说"已完成"不算数，以测试和运行结果为准。
 - 涉及金额、权限、删除数据的代码，必须人工逐行看，AI 不能自己合入。
-- 测试 review 对照 spec 查：B 编号是否全覆盖。
+- 测试 review 对照 contract 查：B 编号是否全覆盖。
 - 查实现细节测试：有没有断言内部 state、按 class 选择器、数渲染次数，有就打回。

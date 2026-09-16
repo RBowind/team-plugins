@@ -27,7 +27,7 @@ sddspec 给复杂 feature 从 PRD + techspec 生成黑盒行为契约 spec（beh
 5. **canon 自检**：按 canon 的可交付自检清单自检。
 6. **Evaluator 自检**：按 `references/evaluator-prompt.md` spawn isolated subagent（subagent，不是 agent team），更新已有 spec 时同时提供修改前基线或本次 diff，max 2 轮。主 agent 读 verdict 后改，每轮重 spawn 保持干净，不让自己评自己。2 轮仍 FAIL → 报告 recurring gaps，暂停转人（可能 techspec 输入不足，不是 spec 写作问题）。
 7. **人 gate（spec DoD）**：Evaluator PASS 后人审机器判不住的（purity 边界、业务正确性、scope、coverage 补 techspec 没覆盖的、Open Questions/follow-ups 残留）。人不审机器已自检的。
-8. **sprint contract 生成**：人 gate 通过后，从本次 spec 差异生成 Behavioral Changes：新增/修改项对应目标 spec scenario，移除项直接记录旧行为及移除后的可观测结果；再补 Q*（通用质量）+ Schema Changes（起草中已梳理，落 contract 不进 spec）+ Follow-ups + Pass Rule。移除项可带 Reason/Migration，contract 不重复 spec 正文。PRD AC 覆盖由 Evaluator 把关（见 evaluator-prompt 降级 coverage），不单列双向对照表。contract 放 feature 目录。
+8. **sprint contract 生成**：人 gate 通过后，从本次 spec 差异生成 Behavioral Changes：新增/修改项对应目标 spec scenario，移除项直接记录旧行为及移除后的可观测结果；再补 Q*（通用质量）+ Schema Changes（起草中已梳理，落 contract 不进 spec）+ Follow-ups + Pass Rule。移除项可带 Reason/Migration，contract 不重复 spec 正文。PRD AC 覆盖由 Evaluator 把关（见 evaluator-prompt 降级 coverage），不单列双向对照表。contract 放 feature 目录。落盘后 spawn 一次 Evaluator 只评 contract（见 `references/evaluator-prompt.md` 的 contract 自检一节），max 2 轮，FAIL 则改后重 spawn。
 9. **交付**：contract 和仍存在的 spec 交给下游 code 阶段实现。后端 Go 项目可运行 `/team-standards:devloop`；其他项目使用宿主仓库自己的开发流程。
 
 读取本地 PRD/techspec 用 `Read`；读取 Confluence、Jira 等远程来源用对应工具。读不到来源时说明限制，不猜测原文内容。
@@ -58,7 +58,7 @@ spec 是项目级交付物，放产品 repo，不放知识库。
 | 文件 | 何时读 |
 |---|---|
 | `references/canon.md` | 起草、自检时：live doc 结构、基线合并、三层密度、可交付清单、语言约束 |
-| `references/evaluator-prompt.md` | spawn Evaluator 时：输入包、评估维度、verdict 格式、降级 coverage、轮次 |
+| `references/evaluator-prompt.md` | spawn Evaluator 时：输入包、评估维度、verdict 格式、降级 coverage、轮次、contract 自检 |
 
 ## 相关 skill
 

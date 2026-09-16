@@ -56,9 +56,9 @@ Source: <spec.md 相对路径>
 Status: DRAFT
 
 ## Behavioral Changes
-- [ ] B1 [ADDED]: <目标 spec 中的 scenario 一句话> — verified by BDD test
-- [ ] B2 [MODIFIED]: <目标 spec 中的 scenario 一句话> — verified by BDD test
-- [ ] B3 [REMOVED]: <旧行为及移除后的可观测结果> — Reason: <可选> — Migration: <可选> — verified by BDD test
+- [ ] B1 [ADDED]: <目标 spec 中的 scenario 一句话>
+- [ ] B2 [MODIFIED]: <目标 spec 中的 scenario 一句话>
+- [ ] B3 [REMOVED]: <旧行为及移除后的可观测结果> — Reason: <可选> — Migration: <可选>
 
 ## Quality                            # Q* 通用质量
 - [ ] Q1: ...
@@ -91,6 +91,14 @@ Status: DRAFT
 删除后同步清理标题下摘要、`## Elaborates` 中已失效的来源、其他 Scenario 的引用，以及因删除而变化的缩写首次展开位置。整个 capability 被移除时删除 spec 文件；contract 保留旧行为、移除后的可观测结果及验证方式，Reason/Migration 仅在有实际内容时写。
 
 Migration 尚未完成时是当前交付约束，放 contract.md；实现细节放 design.md；长期有效的决策理由放 techspec 或 Architecture Decision Record（架构决策记录，ADR）。完成后的改动史由 Git 和 contract 保留。
+
+## B 编号
+
+B 编号是 contract 与测试之间的锚点：测试用例靠它认领自己验证的是哪条行为。它是身份，不是行号。
+
+- 编号一经写入已交付的 contract 即固定，不复用、不重编，新增项一律取新编号往上递增。
+- 确需重编时按破坏性变更处理，同一批改掉测试侧的全部回链，不做静默重排。
+- 每条 B 最终落到恰好一个测试用例、禁止游离用例——这是回链规则，由团队测试规范定义：后端见 `team-test-standards-backend`，前端见 `team-test-standards-frontend`。本 canon 只管编号稳定，不复述回链写法。
 
 ## 该写（可观测边界）
 
@@ -135,6 +143,7 @@ spec 头部 `## Elaborates` 指向 techspec（`docs/tech-specs/...`）。作用�
 - spec 只有 `## Requirements`，无 ADDED/MODIFIED/REMOVED 标记、删除墓碑或 Reason/Migration。
 - 已删除内容没有残留在摘要、`## Elaborates`、其他 Scenario 引用或缩写展开中。
 - contract 只列本次 Behavioral Changes；ADDED/MODIFIED 对应目标 spec Scenario，REMOVED 写清旧行为和移除后的可观测结果。
+- B 编号在本份 contract 内唯一且连续；相对上一版没有重排，新增项取的是新编号。
 - Schema Changes 不在 spec（归 contract.md）；索引/迁移实现细节进 design.md。
 - `## Elaborates` 只指向仍有效的 techspec。
 - 无实现细节泄漏（过 litmus test）。
