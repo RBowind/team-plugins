@@ -84,6 +84,7 @@ spec 引用其他 spec 时：
 - spec 内是否还引用已删除的 Requirement/Scenario？
 - 删除导致缩写首次出现位置变化时，新的首次出现处是否已展开？
 - WARN（不 FAIL）if 公式/规则跨 spec 重复而非引用单一 source。
+- `## Related Capabilities` 列的是否只含直接衔接的 sibling spec，且没有复述对方已定义的行为？
 
 断链、陈旧引用或缩写首次展开失效时 FAIL；仅重复时 WARN。
 

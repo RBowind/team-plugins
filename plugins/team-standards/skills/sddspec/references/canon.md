@@ -31,6 +31,9 @@ spec.md 只放行为契约。schema 变更归 contract.md，不写进 spec。
 ## Elaborates
 - techspec: <pointer to docs/tech-specs/...>
 
+## Related Capabilities
+- `specs/<capability>/spec.md` — <这份 spec 从它哪里接起>
+
 ## Requirements
 ### Requirement: <动词短语描述系统能力>
 The system SHALL <一句话行为>
@@ -124,6 +127,8 @@ B 编号是 contract 与测试之间的锚点：测试用例靠它认领自己�
 
 spec 头部 `## Elaborates` 指向 techspec（`docs/tech-specs/...`）。作用：分层追溯（这份 spec 在哪份地基上展开）+ coverage 对齐基准（Evaluator 用 techspec 当准基准对 coverage）。
 
+`## Related Capabilities` 指向直接衔接的 sibling spec，每条一行说清接在哪里（"下单产出待支付订单，本 spec 从确认支付接起"）。它的作用与 Elaborates 不同：Elaborates 是纵向的地基，Related Capabilities 是横向的边界——既给读者导航，也给 AI 划 scope（这些行为不在这份 spec 里）。只列直接衔接的，不重复对方已定义的行为；对方 spec 被删除时同步删这里。
+
 ## 语言约束
 
 - 业务描述中文，结构 keyword 英文（spec 使用 `SHALL`/`WHEN`/`AND`/`THEN`/`Requirement`/`Scenario`，contract 使用 `ADDED`/`MODIFIED`/`REMOVED`）——Evaluator 机器识别 + 业界通用。
@@ -145,7 +150,7 @@ spec 头部 `## Elaborates` 指向 techspec（`docs/tech-specs/...`）。作用�
 - contract 只列本次 Behavioral Changes；ADDED/MODIFIED 对应目标 spec Scenario，REMOVED 写清旧行为和移除后的可观测结果。
 - B 编号在本份 contract 内唯一且连续；相对上一版没有重排，新增项取的是新编号。
 - Schema Changes 不在 spec（归 contract.md）；索引/迁移实现细节进 design.md。
-- `## Elaborates` 只指向仍有效的 techspec。
+- `## Elaborates` 只指向仍有效的 techspec；`## Related Capabilities` 只列直接衔接的 sibling spec，每条说清接在哪里，不复述对方已定义的行为。
 - 无实现细节泄漏（过 litmus test）。
 - 语言自然度：无 AI 套话、无自造词、缩写首次出现展开全称（description 标题下首现也要，不只 scenario；scenario 里作 DB enum 值的字面标识符不算首现）。
 - 未定义行为显式标 coverage gap，不编造。
