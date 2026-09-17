@@ -1,6 +1,6 @@
 ---
 name: sddspec
-description: 适用于"写 behaviorspec""从 PRD+techspec 生成行为契约 spec""自检 spec""review behaviorspec"等请求；输入是 PRD + techspec（复杂 feature），输出中文黑盒行为契约 spec + 交付 contract。spec 只放行为契约，是 AI 开发期间的 target；schema 变更归 contract。不处理实现代码、安全审计或执行；简单 feature（单 Jira 小改）不走；没 PRD/techspec 或需先探索方案时改用 brainstorming。
+description: 适用于"写 behaviorspec""从 PRD+techspec 生成行为契约 spec""自检 spec""review behaviorspec"等请求；输入是 PRD + techspec（复杂 feature），输出中文黑盒行为契约 spec + 交付 contract。spec 只放行为契约，是 AI 开发期间的 target；schema 变更归 contract。不处理实现代码、安全审计或执行；简单 feature（单 Jira 小改）不走；没 PRD/techspec 或需先探索方案时改用 grill-with-doc。
 ---
 
 # sddspec
@@ -62,11 +62,11 @@ spec 是项目级交付物，放产品 repo，不放知识库。
 
 ## 相关 skill
 
-- 从零探索一个 feature：brainstorming、grill-with-doc
+- 从零探索一个 feature：grill-with-doc
 - 高层地基：techspec
 - 图示设计索引：`../tech-diagram-design/SKILL.md`；只在需要理解或重绘 techspec 图示时加载，不把视觉样式写入 behaviorspec
 - Mermaid 语法：mermaid-diagrams
 - 安全/合规审计：security-reviewer
 - 语言自然度：humanizer
 
-引用的 skill 不在当前环境时的兜底：humanizer 缺失就按 canon 的语言约定自查一遍 AI 味；brainstorming、grill-with-doc、mermaid-diagrams、security-reviewer 缺失就跳过，在交付说明里注明哪步没做。
+引用的 skill 不在当前环境时的兜底：humanizer 缺失就按 canon 的语言约定自查一遍 AI 味；grill-with-doc、mermaid-diagrams、security-reviewer 缺失就跳过，在交付说明里注明哪步没做。
