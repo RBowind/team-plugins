@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="1440" height="800" font-family="'PingFang SC','Microsoft YaHei',system-ui,-apple-system,'Segoe UI',sans-serif">
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<style>
+.tt{font-size:15px;font-weight:500;fill:#0C447C}
+.ss{font-size:11px;fill:#185FA5}
+.pp{font-size:11px;fill:#444441}
+.gg{font-size:12px;font-weight:500;fill:#888780}
+.rr{font-size:12px;fill:#A32D2D}
+.ff{font-size:14px;font-weight:500;fill:#854F0B}
+.lg{font-size:12px;fill:#444441}
+.bx{fill:#E6F1FB;stroke:#185FA5;stroke-width:.6}
+</style>
+
+<text class="gg" x="40" y="362">主链路</text>
+<text class="gg" x="40" y="440">内闭环</text>
+
+<rect x="139" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="217" y="348" text-anchor="middle">一、PRD</text>
+<text class="ss" x="217" y="370" text-anchor="middle">需求锁进文档</text>
+
+<rect x="316" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="394" y="348" text-anchor="middle">二、设计</text>
+<text class="ss" x="394" y="370" text-anchor="middle">techspec + 契约</text>
+
+<rect x="493" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="571" y="348" text-anchor="middle">三、变更</text>
+<text class="ss" x="571" y="370" text-anchor="middle">提案四件套</text>
+
+<rect x="670" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="748" y="348" text-anchor="middle">四、执行</text>
+<text class="ss" x="748" y="370" text-anchor="middle">计划→TDD→止损</text>
+
+<rect x="847" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="925" y="348" text-anchor="middle">五、质量门</text>
+<text class="ss" x="925" y="370" text-anchor="middle">测试+多模型+安全</text>
+
+<rect x="1024" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="1102" y="348" text-anchor="middle">六、发布</text>
+<text class="ss" x="1102" y="370" text-anchor="middle">预检→冒烟→观察</text>
+
+<rect x="1201" y="320" width="155" height="76" rx="10" class="bx"/>
+<text class="tt" x="1279" y="348" text-anchor="middle">七、复盘</text>
+<text class="ss" x="1279" y="370" text-anchor="middle">四问+知识库</text>
+
+<path d="M294 358H306" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<path d="M471 358H483" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<path d="M648 358H660" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<path d="M825 358H837" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<path d="M1002 358H1014" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<path d="M1179 358H1191" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+
+<rect x="140" y="414" width="1220" height="44" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width=".6"/>
+<path d="M217 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M394 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M571 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M748 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M925 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M1102 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<path d="M1279 396V416" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+
+<rect x="147" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="217" y="441" text-anchor="middle">起草→审→改</text>
+<rect x="324" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="394" y="441" text-anchor="middle">缺口问人→定稿</text>
+<rect x="501" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="571" y="441" text-anchor="middle">提案→评审→改</text>
+<rect x="678" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="748" y="441" text-anchor="middle">红→读报错→改→绿</text>
+<rect x="855" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="925" y="441" text-anchor="middle">review→修→再审</text>
+<rect x="1032" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="1102" y="441" text-anchor="middle">预检→冒烟→观察</text>
+<rect x="1209" y="420" width="140" height="32" rx="8" fill="#FFFFFF" stroke="#B4B2A9" stroke-width=".6"/>
+<text class="pp" x="1279" y="441" text-anchor="middle">起草→补数据→定稿</text>
+<g fill="none" stroke="#A32D2D" stroke-width="1.6">
+<path d="M442 320V284Q442 268 426 268H185Q169 268 169 284V320" marker-end="url(#ar)"/>
+<path d="M547 320V284Q547 268 531 268H362Q346 268 346 284V320" marker-end="url(#ar)"/>
+<path d="M700 320V284Q700 268 684 268H539Q523 268 523 284V320" marker-end="url(#ar)"/>
+<path d="M877 320V284Q877 268 861 268H764Q748 268 748 284V320" marker-end="url(#ar)"/>
+<path d="M595 320V242Q595 226 579 226H233Q217 226 217 242V320" marker-end="url(#ar)"/>
+<path d="M796 320V242Q796 226 780 226H410Q394 226 394 242V320" marker-end="url(#ar)"/>
+<path d="M973 320V200Q973 184 957 184H458Q442 184 442 200V320" marker-end="url(#ar)"/>
+<path d="M1150 320V200Q1150 184 1134 184H587Q571 184 571 200V320" marker-end="url(#ar)"/>
+<path d="M1054 320V116Q1054 100 1038 100H281Q265 100 265 116V320" marker-end="url(#ar)"/>
+<path d="M1231 320V158Q1231 142 1215 142H635Q619 142 619 158V320" marker-end="url(#ar)"/>
+</g>
+<g class="rr" text-anchor="middle">
+<text x="306" y="260">需求模糊</text>
+<text x="447" y="260">牵动架构</text>
+<text x="612" y="260">超范围→写回提案</text>
+<text x="813" y="260">测试不过</text>
+<text x="406" y="218">扩需求边界</text>
+<text x="595" y="218">止损：规则漏了</text>
+<text x="708" y="176">契约漂移</text>
+<text x="861" y="176">驳回/发布异常</text>
+<text x="660" y="92">驳回属新需求</text>
+<text x="925" y="134">坑不构成新需求</text>
+</g>
+
+<rect x="740" y="520" width="220" height="64" rx="12" fill="#EAF3DE" stroke="#639922" stroke-width=".6"/>
+<text x="850" y="546" text-anchor="middle" font-size="14" font-weight="500" fill="#3B6D11">本轮交付完成</text>
+<text x="850" y="566" text-anchor="middle" font-size="11" fill="#639922">仓库与知识库留在原地</text>
+
+<rect x="1050" y="520" width="280" height="64" rx="12" fill="#FAEEDA" stroke="#BA7517" stroke-width=".6"/>
+<text class="ff" x="1190" y="546" text-anchor="middle">Flywheel：进下一轮迭代？</text>
+<text x="1190" y="566" text-anchor="middle" font-size="11" fill="#BA7517">复盘判定的是"要不要起下一轮"</text>
+
+<path d="M1356 358H1396V552H1336" fill="none" stroke="#BA7517" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="1385" y="348" text-anchor="middle" font-size="12" fill="#BA7517">进下一轮</text>
+<path d="M1050 552H966" fill="none" stroke="#639922" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="1008" y="542" text-anchor="middle" font-size="12" fill="#639922">否</text>
+<path d="M1190 584V720Q1190 740 1170 740H80Q60 740 60 720V378Q60 358 80 358H133" fill="none" stroke="#BA7517" stroke-width="2" marker-end="url(#ar)"/>
+<text x="700" y="764" text-anchor="middle" font-size="12" fill="#BA7517">是：作为下一轮的输入</text>
+
+<g class="lg">
+<path d="M200 620H244" fill="none" stroke="#185FA5" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="256" y="624">实线：线性推进（主链路）</text>
+<path d="M200 648H244" fill="none" stroke="#A32D2D" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="256" y="652">粗箭头：跨步骤回退，本层修不了就退到上一层</text>
+<path d="M200 676H244" fill="none" stroke="#888780" stroke-width=".6" stroke-dasharray="3 3"/>
+<text x="256" y="680">细虚线：本步的内闭环，原地修</text>
+<path d="M200 704H244" fill="none" stroke="#BA7517" stroke-width="2" marker-end="url(#ar)"/>
+<text x="256" y="708">橙色外环：第七步判定后进入下一轮，不算回退</text>
+</g>
+</svg>

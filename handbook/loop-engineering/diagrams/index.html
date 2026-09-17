@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop Engineering × 七步法 对照图</title>
+<style>
+  :root{color-scheme:light}
+  *{box-sizing:border-box}
+  body{margin:0;padding:40px 24px 80px;background:#F7F7F5;color:#2C2C2A;
+       font-family:'PingFang SC','Microsoft YaHei',system-ui,-apple-system,'Segoe UI',sans-serif}
+  .wrap{max-width:1240px;margin:0 auto}
+  h1{font-size:22px;font-weight:500;margin:0 0 8px}
+  .sub{font-size:14px;color:#5F5E5A;margin:0 0 32px;line-height:1.7}
+  h2{font-size:17px;font-weight:500;margin:0 0 6px}
+  .desc{font-size:13px;color:#5F5E5A;margin:0 0 14px;line-height:1.7}
+  .card{background:#fff;border:1px solid #E3E2DC;border-radius:14px;padding:20px 20px 8px;margin:0 0 36px}
+  .card img{width:100%;height:auto;display:block}
+  .foot{font-size:13px;color:#888780;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Loop Engineering × 直播 5 七步法 对照图</h1>
+  <p class="sub">两张图：七步闭环全貌 + 第四步执行回路展开。配套说明见 <code>loop-engineering-mapping.md</code>。</p>
+
+  <h2>一、主图：七步线性 + 每步闭环回退</h2>
+  <p class="desc">实线是主链路，细虚线是每步内部的原地修循环，红粗箭头是跨步骤回退，橙色外环是复盘判定后进入下一轮。</p>
+  <div class="card"><img src="main-loop.svg" alt="七步闭环全貌"></div>
+
+  <h2>二、细节图：执行回路（第四步）的展开</h2>
+  <p class="desc">三个嵌套回路：计划回路（人放行）、TDD 回路（AI 执行）、防跑偏回路（人触发）。止损线是 TDD 回路的终止条件——没有它，红绿循环就是个死循环。</p>
+  <div class="card"><img src="execution-loop.svg" alt="第四步执行回路"></div>
+
+  <p class="foot">源文件：<code>diagrams/main-loop.svg</code>、<code>diagrams/execution-loop.svg</code>。需要改文案或加减节点时，直接编辑 SVG 里的 text 与 rect 坐标即可。</p>
+</div>
+</body>
+</html>
